@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>the cross core · Outreach Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --amber:#E9A23B;
+  --sun:#F8C64B;
+  --amber-deep:#C97F1B;
+  --ink:#141311;
+  --ink-soft:#4A463F;
+  --paper:#FBF9F5;
+  --card:#FFFFFF;
+  --line:#EDE6D9;
+  --green:#3E8E5A;
+  --green-bg:#E6F2EA;
+  --blue:#3D6FB4;
+  --blue-bg:#E8EFF9;
+  --red:#C25438;
+  --red-bg:#F9E9E4;
+  --gray-bg:#F1EEE8;
+  --radius:16px;
+  --shadow:0 2px 8px rgba(20,19,17,.05), 0 12px 32px rgba(20,19,17,.06);
+  --font-display:'Poppins',system-ui,-apple-system,sans-serif;
+  --font-body:'Inter',system-ui,-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--paper);color:var(--ink);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,select,textarea{font-family:inherit;font-size:14px}
+a{color:inherit}
+
+/* ---------- brand block (signature) ---------- */
+.brand-block{display:inline-flex;flex-direction:column;justify-content:center;background:var(--amber);color:var(--ink);border-radius:12px;padding:8px 12px;font-family:var(--font-display);font-weight:800;line-height:1.02;letter-spacing:-.02em;text-transform:lowercase;user-select:none}
+.brand-block span{display:block}
+
+/* ---------- layout shells ---------- */
+.page{display:none;min-height:100vh}
+.page.active{display:block}
+.wrap{max-width:1220px;margin:0 auto;padding:0 28px}
+
+/* ---------- topbar ---------- */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(251,249,245,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar-inner{display:flex;align-items:center;justify-content:space-between;height:72px}
+.topbar .brand-block{font-size:11px;padding:7px 10px;border-radius:10px}
+.topbar-left{display:flex;align-items:center;gap:14px}
+.portal-tag{font-family:var(--font-display);font-weight:700;font-size:15px;letter-spacing:-.01em}
+.portal-tag small{display:block;font-family:var(--font-body);font-weight:500;font-size:11px;color:var(--ink-soft);letter-spacing:.08em;text-transform:uppercase}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px;padding:10px 18px;border-radius:999px;transition:transform .12s ease, box-shadow .12s ease, background .12s ease}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--ink);color:#fff}
+.btn-primary:hover{background:#2b2925}
+.btn-amber{background:var(--sun);color:var(--ink);box-shadow:0 2px 0 rgba(20,19,17,.15)}
+.btn-amber:hover{background:#f9cf67}
+.btn-ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--line)}
+.btn-ghost:hover{background:#fff;color:var(--ink)}
+.btn-sm{padding:7px 13px;font-size:13px}
+.live-pill{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--green);background:var(--green-bg);padding:6px 12px;border-radius:999px}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1.8s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(62,142,90,.45)}70%{box-shadow:0 0 0 7px rgba(62,142,90,0)}100%{box-shadow:0 0 0 0 rgba(62,142,90,0)}}
+
+/* ---------- home ---------- */
+#page-home{display:none}
+#page-home.active{display:flex;flex-direction:column}
+.home-hero{flex:1;display:flex;align-items:center;padding:70px 28px 40px}
+.home-grid{max-width:1100px;margin:0 auto;width:100%;display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 16px;font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--sun)}
+.home-hero h1{font-family:var(--font-display);font-weight:800;font-size:clamp(38px,5vw,58px);line-height:1.06;letter-spacing:-.03em;margin:22px 0 18px}
+.home-hero h1 em{font-style:normal;color:var(--amber)}
+.home-sub{font-size:16.5px;color:var(--ink-soft);max-width:46ch;margin-bottom:34px}
+.home-ctas{display:flex;gap:14px;flex-wrap:wrap}
+.portal-btn{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:230px;padding:20px 24px;border-radius:20px;text-align:left;transition:transform .15s ease, box-shadow .15s ease}
+.portal-btn:hover{transform:translateY(-3px);box-shadow:0 16px 36px rgba(20,19,17,.14)}
+.portal-btn .pb-title{font-family:var(--font-display);font-weight:700;font-size:19px;letter-spacing:-.01em}
+.portal-btn .pb-desc{font-size:13px;opacity:.75;font-weight:500}
+.portal-btn.va{background:var(--ink);color:#fff}
+.portal-btn.client{background:var(--sun);color:var(--ink);box-shadow:0 3px 0 rgba(20,19,17,.18)}
+.home-panel{background:linear-gradient(160deg,#F2AE45,#E08D14);border-radius:28px;padding:36px;color:var(--ink);box-shadow:var(--shadow)}
+.home-panel .brand-block{background:rgba(255,255,255,.28);font-size:26px;padding:16px 18px;border-radius:16px;margin-bottom:26px}
+.home-cats{display:flex;flex-direction:column;gap:12px}
+.home-cat{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.55);border-radius:14px;padding:13px 18px;font-weight:600;font-size:14px}
+.home-cat b{font-family:var(--font-display);font-weight:800;font-size:16px}
+.home-foot{padding:26px 28px;border-top:1px solid var(--line);color:var(--ink-soft);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+
+/* ---------- dashboard sections ---------- */
+.section{padding:34px 0 10px}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.section-head h2{font-family:var(--font-display);font-weight:700;font-size:22px;letter-spacing:-.02em}
+.section-head .sub{color:var(--ink-soft);font-size:13.5px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.cat-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 20px 18px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.cat-card::before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:var(--cat-color,var(--amber))}
+.cat-name{font-family:var(--font-display);font-weight:700;font-size:15.5px;letter-spacing:-.01em;line-height:1.25;min-height:40px}
+.cat-target{font-size:12px;color:var(--ink-soft);font-weight:600;margin:2px 0 14px}
+.cat-bar{height:10px;border-radius:99px;background:var(--gray-bg);overflow:hidden;margin-bottom:8px}
+.cat-bar i{display:block;height:100%;border-radius:99px;background:var(--cat-color,var(--amber));transition:width .5s ease}
+.cat-pct{display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-bottom:14px}
+.cat-pct b{color:var(--ink);font-size:13px}
+.cat-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;font-size:12.5px}
+.cat-stat{display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding-bottom:5px}
+.cat-stat span{color:var(--ink-soft)}
+.cat-stat b{font-variant-numeric:tabular-nums}
+.cat-breakdown{display:flex;flex-direction:column;gap:6px;background:var(--paper);border:1px dashed var(--line);border-radius:12px;padding:10px 12px;margin-bottom:14px}
+.cat-bd-row{display:flex;align-items:center;gap:8px;font-size:12.5px}
+.cat-bd-row span:nth-child(2){flex:1;color:var(--ink-soft);font-weight:600}
+.cat-bd-row b{font-variant-numeric:tabular-nums;font-size:12px}
+.cat-bd-dot{width:9px;height:9px;border-radius:3px;flex:none}
+.remaining-chip{margin-top:13px;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 11px;border-radius:999px}
+.remaining-chip.togo{background:var(--red-bg);color:var(--red)}
+.remaining-chip.done{background:var(--green-bg);color:var(--green)}
+
+/* ---------- summary strip ---------- */
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:6px}
+.strip-item{background:var(--ink);color:#fff;border-radius:var(--radius);padding:16px 18px}
+.strip-item.alt{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.strip-item .k{font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;opacity:.65}
+.strip-item .v{font-family:var(--font-display);font-weight:800;font-size:26px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin-top:2px}
+.strip-item .v small{font-size:14px;font-weight:600;opacity:.6}
+.strip-item.act1{background:var(--blue-bg);color:var(--blue);border:1px solid #D4E2F5}
+.strip-item.act2{background:var(--green-bg);color:var(--green);border:1px solid #D3E7DB}
+.strip-item.act3{background:#EDE9FB;color:#6B4FC1;border:1px solid #E0D9F5}
+.strip-item.act4{background:#FBEFD9;color:var(--amber-deep);border:1px solid #F2E1BF}
+.sb-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px;margin-bottom:6px}
+.sb-row{display:flex;align-items:center;gap:12px;padding:7px 0;border-bottom:1px dashed var(--line)}
+.sb-row:last-child{border-bottom:none}
+.sb-row .status-pill{width:190px;text-align:center;flex:none}
+.sb-bar{flex:1;height:8px;border-radius:99px;background:var(--gray-bg);overflow:hidden}
+.sb-bar i{display:block;height:100%;background:var(--amber);border-radius:99px;transition:width .5s ease}
+.sb-row b{width:44px;text-align:right;font-variant-numeric:tabular-nums;font-size:13.5px}
+@media(max-width:640px){.sb-row .status-pill{width:140px;font-size:10px}}
+
+/* ---------- table ---------- */
+.table-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:40px}
+.table-tools{display:flex;gap:10px;padding:16px;border-bottom:1px solid var(--line);flex-wrap:wrap;align-items:center}
+.table-tools input[type=text]{flex:1;min-width:200px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--paper)}
+.table-tools select{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--paper);font-weight:500}
+.table-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:900px}
+th{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);text-align:left;padding:12px 16px;background:var(--paper);border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:13px 16px;border-bottom:1px solid var(--line);vertical-align:top;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FCFAF6}
+.p-name{font-weight:600}
+.p-meta{font-size:12px;color:var(--ink-soft)}
+.cat-chip{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--gray-bg);color:var(--ink-soft);white-space:nowrap}
+.li-link{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;color:var(--blue);text-decoration:none;background:var(--blue-bg);padding:5px 11px;border-radius:999px;white-space:nowrap}
+.li-link:hover{text-decoration:underline}
+.status-select{border-radius:999px;padding:6px 10px;font-size:12px;font-weight:700;border:1.5px solid transparent;appearance:none;-webkit-appearance:none;padding-right:24px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23444' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;cursor:pointer}
+.status-pill{display:inline-block;border-radius:999px;padding:5px 12px;font-size:11.5px;font-weight:700;white-space:nowrap}
+.st-0{background:var(--gray-bg);color:var(--ink-soft)}
+.st-1{background:var(--blue-bg);color:var(--blue)}
+.st-2{background:#DCE7F7;color:#2C5A9E}
+.st-3{background:var(--green-bg);color:var(--green)}
+.st-4{background:#E3F2EF;color:#1E7A6A}
+.st-5{background:#EDE9FB;color:#6B4FC1}
+.st-6{background:#F3E9FB;color:#8A4FC1}
+.st-7{background:#FBEFD9;color:var(--amber-deep)}
+.st-8{background:#FDE8D2;color:#B4611B}
+.st-9{background:#FCE3E9;color:#B33A5E}
+.st-10{background:var(--ink);color:var(--sun)}
+.notes-cell{max-width:220px;font-size:12.5px;color:var(--ink-soft);white-space:pre-wrap}
+.row-actions{display:flex;gap:6px}
+.icon-btn{width:30px;height:30px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;background:var(--paper);border:1px solid var(--line);font-size:13px;transition:background .12s}
+.icon-btn:hover{background:var(--sun);border-color:var(--sun)}
+.empty-state{padding:56px 24px;text-align:center;color:var(--ink-soft)}
+.empty-state b{display:block;font-family:var(--font-display);font-size:17px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- VA form ---------- */
+.form-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;margin-bottom:30px}
+.form-card h3{font-family:var(--font-display);font-size:17px;font-weight:700;margin-bottom:16px}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.field label{display:block;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:var(--paper)}
+.field input:focus,.field select:focus,.field textarea:focus,.table-tools input:focus,.table-tools select:focus{outline:2px solid var(--sun);outline-offset:1px;border-color:var(--amber)}
+.field-full{grid-column:1/-1}
+.form-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:16px}
+
+/* ---------- activity ---------- */
+.activity-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:44px;overflow:hidden}
+.activity-head{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.activity-head h3{font-family:var(--font-display);font-size:16px;font-weight:700}
+.activity-list{max-height:340px;overflow-y:auto}
+.activity-item{display:flex;gap:12px;padding:13px 20px;border-bottom:1px solid var(--line);font-size:13px}
+.activity-item:last-child{border-bottom:none}
+.act-dot{flex:none;width:9px;height:9px;border-radius:50%;background:var(--amber);margin-top:5px}
+.act-dot.add{background:var(--green)}
+.act-time{flex:none;color:var(--ink-soft);font-size:11.5px;width:118px;padding-top:1px;font-variant-numeric:tabular-nums}
+.act-text b{font-weight:600}
+
+/* ---------- toasts ---------- */
+.toast-zone{position:fixed;right:20px;bottom:20px;z-index:200;display:flex;flex-direction:column;gap:10px;max-width:340px}
+.toast{background:var(--ink);color:#fff;border-radius:14px;padding:14px 16px;font-size:13px;box-shadow:0 14px 34px rgba(20,19,17,.3);display:flex;gap:11px;align-items:flex-start;animation:toastIn .3s ease}
+.toast .t-icon{flex:none;width:26px;height:26px;border-radius:8px;background:var(--sun);color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800}
+.toast .t-title{font-weight:700;margin-bottom:1px}
+.toast .t-body{opacity:.8;font-size:12.5px}
+@keyframes toastIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.toast.leaving{opacity:0;transform:translateY(8px);transition:all .3s}
+
+/* ---------- modal ---------- */
+.modal-veil{position:fixed;inset:0;background:rgba(20,19,17,.45);z-index:150;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-veil.open{display:flex}
+.modal{background:#fff;border-radius:20px;width:min(560px,100%);max-height:90vh;overflow-y:auto;padding:26px;box-shadow:0 24px 60px rgba(20,19,17,.3)}
+.modal h3{font-family:var(--font-display);font-size:18px;font-weight:700;margin-bottom:18px}
+.sync-note{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-soft);padding:10px 0 26px}
+.sync-note i{font-style:normal}
+.client-hello{display:flex;align-items:center;gap:16px;background:linear-gradient(135deg,#F2AE45,#E08D14);border-radius:var(--radius);padding:18px 22px;margin-top:28px;color:var(--ink);box-shadow:var(--shadow);flex-wrap:wrap}
+.ch-avatar{flex:none;width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:18px}
+.ch-name{font-family:var(--font-display);font-weight:700;font-size:17px;letter-spacing:-.01em}
+.ch-role{font-size:12.5px;font-weight:600;opacity:.85}
+.ch-note{margin-left:auto;font-size:12px;font-weight:600;background:rgba(255,255,255,.5);border-radius:999px;padding:7px 14px;max-width:340px}
+@media(max-width:760px){.ch-note{margin-left:0;max-width:none}}
+@media(max-width:900px){
+  .home-grid{grid-template-columns:1fr;gap:40px}
+  .act-time{width:auto;min-width:86px}
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== HOME ==================== -->
+<div class="page" id="page-home">
+  <div class="home-hero">
+    <div class="home-grid">
+      <div>
+        <span class="eyebrow">Outreach Command Center</span>
+        <h1>Every lead, every status, in <em>one</em> place.</h1>
+        <p class="home-sub">A shared workspace for The Cross Core outreach campaigns. The VA logs and updates prospects; the client watches progress update live — same database, zero refreshes.</p>
+        <div class="home-ctas">
+          <button class="portal-btn va" onclick="go('va')">
+            <span class="pb-title">Open VA Portal →</span>
+            <span class="pb-desc">Add prospects, update statuses, log notes</span>
+          </button>
+          <button class="portal-btn client" onclick="go('client')">
+            <span class="pb-title">Open Client Portal →</span>
+            <span class="pb-desc">For Ziba Alizadeh · Payvand — live targets &amp; updates</span>
+          </button>
+        </div>
+      </div>
+      <div class="home-panel">
+        <span class="brand-block"><span>the</span><span>cross</span><span>core</span></span>
+        <div class="home-cats">
+          <div class="home-cat"><span>Speaking Engagements</span><b>15 / day</b></div>
+          <div class="home-cat"><span>Healthcare · Consulting · Staffing &amp; Recruitment</span><b>15 / day shared</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="home-foot">
+    <span>© The Cross Core OPC · Virtual assistance, reimagined.</span>
+    <span>Centralized database · Real-time sync</span>
+  </div>
+</div>
+
+<!-- ==================== VA PORTAL ==================== -->
+<div class="page" id="page-va">
+  <div class="topbar"><div class="wrap topbar-inner">
+    <div class="topbar-left">
+      <span class="brand-block"><span>the</span><span>cross</span><span>core</span></span>
+      <div class="portal-tag">VA Portal<small>Payvand campaign · Editing access</small></div>
+    </div>
+    <div class="topbar-right">
+      <span class="live-pill" id="va-sync"><span class="live-dot"></span>Synced</span>
+      <button class="btn btn-ghost btn-sm" onclick="go('client')">Client view</button>
+      <button class="btn btn-ghost btn-sm" onclick="go('home')">Home</button>
+    </div>
+  </div></div>
+
+  <div class="wrap">
+    <div class="section">
+      <div class="section-head">
+        <h2>Today's progress</h2>
+        <span class="sub" id="va-date"></span>
+      </div>
+      <div class="strip" id="va-strip"></div>
+      <div style="height:14px"></div>
+      <div class="strip" id="va-act-strip"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h2>Daily targets</h2><span class="sub">Speaking has its own 15 · the other 3 categories share one 15 · resets daily</span></div>
+      <div class="cards" id="va-cards"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h2>Add a new prospect</h2></div>
+      <div class="form-card">
+        <div class="form-grid">
+          <div class="field"><label for="f-name">Full name *</label><input id="f-name" type="text" placeholder="e.g. Maria Santos"></div>
+          <div class="field"><label for="f-title">Role / title</label><input id="f-title" type="text" placeholder="e.g. Founder & CEO"></div>
+          <div class="field"><label for="f-org">Organization</label><input id="f-org" type="text" placeholder="e.g. Horizon Health Group"></div>
+          <div class="field"><label for="f-cat">Category *</label><select id="f-cat"></select></div>
+          <div class="field"><label for="f-status">Status</label><select id="f-status"></select></div>
+          <div class="field field-full"><label for="f-link">LinkedIn profile URL *</label><input id="f-link" type="text" placeholder="https://www.linkedin.com/in/…"></div>
+          <div class="field field-full"><label for="f-notes">Coordination notes</label><textarea id="f-notes" rows="2" placeholder="Referrals, talking points, scheduling details…"></textarea></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-ghost" onclick="clearForm()">Clear</button>
+          <button class="btn btn-amber" id="add-btn" onclick="addProspect()">＋ Add prospect</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h2>Prospect list</h2><span class="sub" id="va-count"></span></div>
+      <div class="table-card">
+        <div class="table-tools">
+          <input type="text" id="va-search" placeholder="Search name, organization, or notes…" oninput="renderVaTable()">
+          <select id="va-filter-cat" onchange="renderVaTable()"></select>
+          <select id="va-filter-status" onchange="renderVaTable()"></select>
+        </div>
+        <div class="table-scroll"><table>
+          <thead><tr><th>Prospect</th><th>Category</th><th>LinkedIn</th><th>Status</th><th>Notes</th><th>Added</th><th></th></tr></thead>
+          <tbody id="va-tbody"></tbody>
+        </table></div>
+        <div class="empty-state" id="va-empty" style="display:none"><b>No prospects yet</b>Add your first lead with the form above — it will appear on the client's dashboard instantly.</div>
+      </div>
+    </div>
+    <div class="sync-note"><i>🔒</i> All entries are saved to the shared Cross Core database — safe across refreshes, devices, and sessions.</div>
+  </div>
+</div>
+
+<!-- ==================== CLIENT PORTAL ==================== -->
+<div class="page" id="page-client">
+  <div class="topbar"><div class="wrap topbar-inner">
+    <div class="topbar-left">
+      <span class="brand-block"><span>the</span><span>cross</span><span>core</span></span>
+      <div class="portal-tag">Client Portal<small>Ziba Alizadeh · Payvand</small></div>
+    </div>
+    <div class="topbar-right">
+      <span class="live-pill" id="cl-live"><span class="live-dot"></span>Live</span>
+      <button class="btn btn-ghost btn-sm" onclick="go('home')">Home</button>
+    </div>
+  </div></div>
+
+  <div class="wrap">
+    <div class="client-hello">
+      <div class="ch-avatar">ZA</div>
+      <div>
+        <div class="ch-name">Welcome back, Ziba Alizadeh</div>
+        <div class="ch-role">President &amp; Managing Director · Payvand Solutions Group</div>
+      </div>
+      <div class="ch-note">Live outreach progress for your speaking engagement, healthcare, consulting &amp; staffing campaigns</div>
+    </div>
+    <div class="section">
+      <div class="section-head">
+        <h2>Campaign overview</h2>
+        <span class="sub" id="cl-updated">—</span>
+      </div>
+      <div class="strip" id="cl-strip"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h2>Today's outreach activity</h2><span class="sub">Counted live as your VA updates each prospect</span></div>
+      <div class="strip" id="cl-act-strip"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h2>Prospects by status</h2><span class="sub" id="cl-status-total"></span></div>
+      <div class="sb-card" id="cl-status-breakdown"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h2>Daily targets</h2><span class="sub">Speaking: 15/day · Healthcare + Consulting + Staffing share 15/day · updates automatically</span></div>
+      <div class="cards" id="cl-cards"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h2>Live activity</h2></div>
+      <div class="activity-card">
+        <div class="activity-head"><h3>Latest updates from your VA</h3></div>
+        <div class="activity-list" id="cl-activity"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h2>All prospects</h2><span class="sub" id="cl-count"></span></div>
+      <div class="table-card">
+        <div class="table-tools">
+          <input type="text" id="cl-search" placeholder="Search prospects…" oninput="renderClientTable()">
+          <select id="cl-filter-cat" onchange="renderClientTable()"></select>
+          <select id="cl-filter-status" onchange="renderClientTable()"></select>
+        </div>
+        <div class="table-scroll"><table>
+          <thead><tr><th>Prospect</th><th>Category</th><th>LinkedIn</th><th>Status</th><th>Notes</th><th>Added</th><th>Last update</th></tr></thead>
+          <tbody id="cl-tbody"></tbody>
+        </table></div>
+        <div class="empty-state" id="cl-empty" style="display:none"><b>Nothing here yet</b>As soon as your VA adds prospects, they'll appear here in real time.</div>
+      </div>
+    </div>
+    <div class="sync-note"><i>📡</i> This dashboard checks the shared database every few seconds and refreshes itself automatically.</div>
+  </div>
+</div>
+
+<!-- edit modal -->
+<div class="modal-veil" id="modal-veil">
+  <div class="modal">
+    <h3>Edit prospect</h3>
+    <div class="form-grid">
+      <div class="field"><label for="e-name">Full name *</label><input id="e-name" type="text"></div>
+      <div class="field"><label for="e-title">Role / title</label><input id="e-title" type="text"></div>
+      <div class="field"><label for="e-org">Organization</label><input id="e-org" type="text"></div>
+      <div class="field"><label for="e-cat">Category</label><select id="e-cat"></select></div>
+      <div class="field field-full"><label for="e-link">LinkedIn URL *</label><input id="e-link" type="text"></div>
+      <div class="field field-full"><label for="e-notes">Coordination notes</label><textarea id="e-notes" rows="3"></textarea></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEdit()">Save changes</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-zone" id="toast-zone"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+/* ===================== config ===================== */
+const STORAGE_KEY = 'crosscore_outreach_v1';
+const CATEGORIES = [
+  {id:'speaking',  name:'Speaking Engagement Opportunities', short:'Speaking Engagements', color:'#E9A23B'},
+  {id:'healthcare',name:'Healthcare Staffing Companies',     short:'Healthcare Staffing',  color:'#C97F1B'},
+  {id:'consulting',name:'Consulting Firms',                  short:'Consulting Firms',     color:'#3D6FB4'},
+  {id:'staffing',  name:'Staffing and Recruitment Companies',short:'Staffing & Recruitment',color:'#3E8E5A'},
+];
+/* Daily targets are per GROUP:
+   - Speaking Engagements: 15/day on its own
+   - Healthcare + Consulting + Staffing & Recruitment: one shared 15/day */
+const GROUPS = [
+  {id:'g-speaking', name:'Speaking Engagement Opportunities', target:15, cats:['speaking'], color:'#E9A23B'},
+  {id:'g-business', name:'Healthcare · Consulting · Staffing & Recruitment', target:15, cats:['healthcare','consulting','staffing'], color:'#C97F1B'},
+];
+const DAILY_TARGET_TOTAL = GROUPS.reduce((s,g)=>s+g.target,0);
+const STATUSES = [
+  'Not Contacted','Connection Request Sent','Connection Note Sent','Connected',
+  'Replied','Follow-Up Sent','Follow-Up Needed','In Conversation',
+  'In Coordination','Meeting Scheduled','Completed'
+];
+const CONTACTED_FROM = 1; // status index >= 1 counts as contacted
+const CONNECTED_FROM = 3; // status index >= 3 counts as a connection
+/* Which status transitions count toward the client's daily activity metrics */
+const ACTION_OF_STATUS = {
+  'Connection Request Sent':'requests',
+  'Connection Note Sent':'requests',
+  'Connected':'connections',
+  'Follow-Up Sent':'followups',
+  'Follow-Up Needed':null,
+  'Replied':'replies',
+  'In Conversation':'replies',
+};
+
+/* ===================== state ===================== */
+let db = {prospects:[], activity:[]};
+let currentPage = 'home';
+let editingId = null;
+let clientSeenActivity = null; // activity ids already shown to client
+let pollTimer = null;
+
+/* ===================== storage layer (Firebase Realtime Database) =====================
+   1. Create a free Firebase project at https://console.firebase.google.com
+   2. Add a Web App, copy its config object, and paste it below.
+   3. In Build → Realtime Database: create a database, start in test mode.
+   See README.md for the full step-by-step guide. */
+const FIREBASE_CONFIG = {
+  apiKey: "PASTE_YOUR_API_KEY",
+  authDomain: "PASTE_YOUR_PROJECT.firebaseapp.com",
+  databaseURL: "https://PASTE_YOUR_PROJECT-default-rtdb.firebaseio.com",
+  projectId: "PASTE_YOUR_PROJECT",
+  storageBucket: "PASTE_YOUR_PROJECT.appspot.com",
+  messagingSenderId: "000000000000",
+  appId: "PASTE_YOUR_APP_ID"
+};
+const DB_PATH = 'crosscore/outreach';
+const FIREBASE_READY = typeof firebase !== 'undefined' && FIREBASE_CONFIG.apiKey && !FIREBASE_CONFIG.apiKey.startsWith('PASTE');
+const CLAUDE_READY = typeof window.storage !== 'undefined' && typeof window.storage.get === 'function';
+/* Backend priority: Firebase (deployed with config) → Claude shared storage (in-Claude preview) → localStorage (demo) */
+const BACKEND = FIREBASE_READY ? 'firebase' : (CLAUDE_READY ? 'claude' : 'local');
+let fbRef = null;
+
+function normalizeDb(raw){
+  if(!raw || typeof raw !== 'object') raw = {};
+  raw.prospects = Array.isArray(raw.prospects) ? raw.prospects : Object.values(raw.prospects||{});
+  raw.activity  = Array.isArray(raw.activity)  ? raw.activity  : Object.values(raw.activity||{});
+  raw.dailyCounts = raw.dailyCounts || {};
+  return raw;
+}
+async function loadDb(){
+  try{
+    if(BACKEND==='firebase'){
+      const snap = await fbRef.get();
+      db = normalizeDb(snap.exists() ? snap.val() : null);
+    }else if(BACKEND==='claude'){
+      let raw = null;
+      try{ const res = await window.storage.get(STORAGE_KEY, true); raw = res && res.value ? JSON.parse(res.value) : null; }
+      catch(e){ /* key does not exist yet — start fresh */ }
+      db = normalizeDb(raw);
+    }else{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      db = normalizeDb(raw ? JSON.parse(raw) : null);
+    }
+  }catch(e){ console.error('Load failed', e); db = normalizeDb(db); }
+}
+async function persist(){
+  if(BACKEND==='firebase'){ await fbRef.set(JSON.parse(JSON.stringify(db))); }
+  else if(BACKEND==='claude'){ await window.storage.set(STORAGE_KEY, JSON.stringify(db), true); }
+  else{ localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); }
+}
+/* Every mutation re-reads the latest DB first, applies the change, then saves —
+   so two devices editing at once don't overwrite each other's records. */
+async function mutate(fn){
+  setSync('saving');
+  try{
+    if(BACKEND==='firebase'){
+      await fbRef.transaction(raw=>{
+        const d = normalizeDb(raw);
+        fn(d);
+        d.lastUpdated = Date.now();
+        return JSON.parse(JSON.stringify(d));
+      });
+      await loadDb();
+    }else{
+      await loadDb();
+      fn(db);
+      db.lastUpdated = Date.now();
+      await persist();
+    }
+    setSync('ok');
+    renderAll();
+    return true;
+  }catch(e){
+    console.error('Save failed', e);
+    setSync('error');
+    toast('⚠','Could not save','Check your connection and try again.');
+    return false;
+  }
+}
+function setSync(state){
+  const el = document.getElementById('va-sync');
+  if(!el) return;
+  if(state==='saving'){ el.innerHTML='<span class="live-dot"></span>Saving…'; }
+  else if(state==='error'){ el.innerHTML='⚠ Retry needed'; el.style.background='var(--red-bg)'; el.style.color='var(--red)'; return; }
+  else { el.innerHTML='<span class="live-dot"></span>Synced'; }
+  el.style.background=''; el.style.color='';
+}
+
+/* ===================== helpers ===================== */
+const $  = id => document.getElementById(id);
+const esc = s => String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const todayKey = () => { const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
+const fmtDate = ts => new Date(ts).toLocaleDateString(undefined,{month:'short',day:'numeric'});
+const fmtTime = ts => new Date(ts).toLocaleString(undefined,{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+function normalizeLink(u){
+  u = (u||'').trim();
+  if(!u) return '';
+  if(!/^https?:\/\//i.test(u)) u = 'https://' + u;
+  return u;
+}
+function catById(id){ return CATEGORIES.find(c=>c.id===id) || CATEGORIES[0]; }
+function logActivity(dbo, type, text){
+  dbo.activity.unshift({id:uid(), ts:Date.now(), type, text});
+  if(dbo.activity.length > 200) dbo.activity.length = 200;
+}
+
+/* ===================== stats ===================== */
+function statsForGroup(group){
+  const all = db.prospects.filter(p=>group.cats.includes(p.category));
+  const today = all.filter(p=>p.dayKey===todayKey());
+  const idx = p => STATUSES.indexOf(p.status);
+  return {
+    target: group.target,
+    addedToday: today.length,
+    totalAdded: all.length,
+    requestsSent: all.filter(p=>idx(p)>=1 && idx(p)<=6).length,
+    connections: all.filter(p=>idx(p)>=3).length,
+    inCoordination: all.filter(p=>p.status==='In Coordination').length,
+    completed: all.filter(p=>p.status==='Completed').length,
+    remaining: Math.max(0, group.target - today.length),
+    pct: Math.min(100, Math.round(today.length / group.target * 100)),
+  };
+}
+function catBreakdown(catId){
+  const all = db.prospects.filter(p=>p.category===catId);
+  return { total: all.length, today: all.filter(p=>p.dayKey===todayKey()).length };
+}
+function todayActivity(){
+  const dc = (db.dailyCounts && db.dailyCounts[todayKey()]) || {};
+  return {
+    requests: dc.requests||0,
+    connections: dc.connections||0,
+    followups: dc.followups||0,
+    replies: dc.replies||0,
+  };
+}
+function statusCounts(){
+  const m = {};
+  STATUSES.forEach(s=>m[s]=0);
+  db.prospects.forEach(p=>{ if(m[p.status]!==undefined) m[p.status]++; else m[p.status]=1; });
+  return m;
+}
+function globalStats(){
+  const today = db.prospects.filter(p=>p.dayKey===todayKey());
+  const idx = p => STATUSES.indexOf(p.status);
+  const targetTotal = DAILY_TARGET_TOTAL;
+  return {
+    totalLeads: db.prospects.length,
+    addedToday: today.length,
+    targetTotal,
+    contacted: db.prospects.filter(p=>idx(p)>=CONTACTED_FROM).length,
+    connections: db.prospects.filter(p=>idx(p)>=3).length,
+    inCoordination: db.prospects.filter(p=>p.status==='In Coordination').length,
+    remainingToday: Math.max(0, targetTotal - today.length),
+    pctToday: Math.min(100, Math.round(today.length/targetTotal*100)),
+  };
+}
+
+/* ===================== rendering: shared pieces ===================== */
+function catCardHtml(group){
+  const s = statsForGroup(group);
+  const breakdown = group.cats.length > 1
+    ? `<div class="cat-breakdown">${group.cats.map(cid=>{
+        const c = catById(cid), b = catBreakdown(cid);
+        return `<div class="cat-bd-row"><span class="cat-bd-dot" style="background:${c.color}"></span><span>${esc(c.short)}</span><b>${b.today} today · ${b.total} total</b></div>`;
+      }).join('')}</div>`
+    : '';
+  return `<div class="cat-card" style="--cat-color:${group.color}">
+    <div class="cat-name">${esc(group.name)}</div>
+    <div class="cat-target">Daily target · ${s.target} leads${group.cats.length>1?' (shared across the 3 categories)':''}</div>
+    <div class="cat-bar"><i style="width:${s.pct}%"></i></div>
+    <div class="cat-pct"><span>Today: <b>${s.addedToday} / ${s.target}</b></span><b>${s.pct}%</b></div>
+    ${breakdown}
+    <div class="cat-stats">
+      <div class="cat-stat"><span>Total added</span><b>${s.totalAdded}</b></div>
+      <div class="cat-stat"><span>Requests sent</span><b>${s.requestsSent}</b></div>
+      <div class="cat-stat"><span>Connections</span><b>${s.connections}</b></div>
+      <div class="cat-stat"><span>In coordination</span><b>${s.inCoordination}</b></div>
+    </div>
+    ${s.remaining>0
+      ? `<span class="remaining-chip togo">${s.remaining} more needed today</span>`
+      : `<span class="remaining-chip done">✓ Daily target reached</span>`}
+  </div>`;
+}
+function stripHtml(forClient){
+  const g = globalStats();
+  return `
+    <div class="strip-item"><div class="k">Leads added today</div><div class="v">${g.addedToday}<small> / ${g.targetTotal}</small></div></div>
+    <div class="strip-item alt"><div class="k">Today's completion</div><div class="v">${g.pctToday}%</div></div>
+    <div class="strip-item alt"><div class="k">Total leads</div><div class="v">${g.totalLeads}</div></div>
+    <div class="strip-item alt"><div class="k">Contacted</div><div class="v">${g.contacted}</div></div>
+    <div class="strip-item alt"><div class="k">Connections</div><div class="v">${g.connections}</div></div>
+    <div class="strip-item alt"><div class="k">In coordination</div><div class="v">${g.inCoordination}</div></div>`;
+}
+function activityStripHtml(){
+  const t = todayActivity();
+  return `
+    <div class="strip-item act1"><div class="k">Requests sent today</div><div class="v">${t.requests}</div></div>
+    <div class="strip-item act2"><div class="k">Connections today</div><div class="v">${t.connections}</div></div>
+    <div class="strip-item act3"><div class="k">Follow-ups today</div><div class="v">${t.followups}</div></div>
+    <div class="strip-item act4"><div class="k">Replies today</div><div class="v">${t.replies}</div></div>`;
+}
+function statusBreakdownHtml(){
+  const m = statusCounts();
+  return STATUSES.map((s,i)=>`<div class="sb-row"><span class="status-pill st-${i}">${esc(s)}</span><span class="sb-bar"><i style="width:${db.prospects.length?Math.round(m[s]/db.prospects.length*100):0}%"></i></span><b>${m[s]}</b></div>`).join('');
+}
+function statusPill(status){
+  const i = Math.max(0, STATUSES.indexOf(status));
+  return `<span class="status-pill st-${i}">${esc(status)}</span>`;
+}
+function filteredProspects(searchId, catId, stId){
+  const q = ($(searchId).value||'').toLowerCase();
+  const fc = $(catId).value, fs = $(stId).value;
+  return db.prospects.filter(p=>{
+    if(fc!=='all' && p.category!==fc) return false;
+    if(fs!=='all' && p.status!==fs) return false;
+    if(q){
+      const hay = [p.name,p.title,p.org,p.notes].join(' ').toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  }).sort((a,b)=>b.createdAt-a.createdAt);
+}
+
+/* ===================== VA portal ===================== */
+function renderVa(){
+  $('va-date').textContent = new Date().toLocaleDateString(undefined,{weekday:'long', month:'long', day:'numeric', year:'numeric'});
+  $('va-strip').innerHTML = stripHtml(false);
+  $('va-act-strip').innerHTML = activityStripHtml();
+  $('va-cards').innerHTML = GROUPS.map(catCardHtml).join('');
+  renderVaTable();
+}
+function renderVaTable(){
+  const list = filteredProspects('va-search','va-filter-cat','va-filter-status');
+  $('va-count').textContent = `${list.length} of ${db.prospects.length} prospects shown`;
+  $('va-empty').style.display = db.prospects.length ? 'none' : 'block';
+  $('va-tbody').innerHTML = list.map(p=>{
+    const cat = catById(p.category);
+    const statusOptions = STATUSES.map(s=>`<option ${s===p.status?'selected':''}>${s}</option>`).join('');
+    const si = Math.max(0, STATUSES.indexOf(p.status));
+    return `<tr>
+      <td><div class="p-name">${esc(p.name)}</div><div class="p-meta">${esc([p.title,p.org,p.country].filter(Boolean).join(' · '))}</div></td>
+      <td><span class="cat-chip" style="background:${cat.color}22;color:${cat.color}">${esc(cat.short)}</span></td>
+      <td>${p.linkedin?`<a class="li-link" href="${esc(p.linkedin)}" target="_blank" rel="noopener">in · Open profile ↗</a>`:'<span class="p-meta">—</span>'}</td>
+      <td><select class="status-select st-${si}" onchange="changeStatus('${p.id}', this.value)">${statusOptions}</select></td>
+      <td class="notes-cell">${esc(p.notes||'')}</td>
+      <td class="p-meta">${fmtDate(p.createdAt)}</td>
+      <td><div class="row-actions">
+        <button class="icon-btn" title="Edit details" onclick="openEdit('${p.id}')">✎</button>
+        <button class="icon-btn" title="Delete" onclick="removeProspect('${p.id}', this)">🗑</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+function clearForm(){
+  ['f-name','f-title','f-org','f-link','f-notes'].forEach(id=>$(id).value='');
+  $('f-status').value = STATUSES[0];
+}
+async function addProspect(){
+  const name = $('f-name').value.trim();
+  const link = normalizeLink($('f-link').value);
+  if(!name){ toast('!','Name is required','Enter the prospect\'s full name to add them.'); $('f-name').focus(); return; }
+  if(!link){ toast('!','LinkedIn URL is required','Paste the prospect\'s LinkedIn profile link.'); $('f-link').focus(); return; }
+  const p = {
+    id: uid(),
+    name, title: $('f-title').value.trim(), org: $('f-org').value.trim(),
+    linkedin: link,
+    category: $('f-cat').value,
+    status: $('f-status').value,
+    notes: $('f-notes').value.trim(),
+    createdAt: Date.now(), updatedAt: Date.now(), dayKey: todayKey(),
+  };
+  $('add-btn').disabled = true;
+  const ok = await mutate(d=>{
+    d.prospects.unshift(p);
+    bumpDaily(d, ACTION_OF_STATUS[p.status]);
+    logActivity(d,'add', `New prospect added: <b>${esc(p.name)}</b>${p.org?` (${esc(p.org)})`:''} · ${esc(catById(p.category).short)}`);
+  });
+  $('add-btn').disabled = false;
+  if(ok){ clearForm(); toast('✓','Prospect added',`${p.name} is now visible on the client dashboard.`); }
+}
+function bumpDaily(dbo, action){
+  if(!action) return;
+  if(!dbo.dailyCounts) dbo.dailyCounts = {};
+  const k = todayKey();
+  if(!dbo.dailyCounts[k]) dbo.dailyCounts[k] = {requests:0, connections:0, followups:0, replies:0};
+  dbo.dailyCounts[k][action] = (dbo.dailyCounts[k][action]||0) + 1;
+}
+async function changeStatus(id, status){
+  await mutate(d=>{
+    const p = d.prospects.find(x=>x.id===id); if(!p) return;
+    const from = p.status;
+    if(from === status) return;
+    p.status = status; p.updatedAt = Date.now();
+    /* only count the action if the prospect is newly entering that stage */
+    const act = ACTION_OF_STATUS[status];
+    const fromAct = ACTION_OF_STATUS[from];
+    if(act && act !== fromAct) bumpDaily(d, act);
+    logActivity(d,'status', `<b>${esc(p.name)}</b>: ${esc(from)} → <b>${esc(status)}</b>`);
+  });
+}
+let pendingDelete = null;
+async function removeProspect(id, btn){
+  const p = db.prospects.find(x=>x.id===id); if(!p) return;
+  if(pendingDelete !== id){
+    pendingDelete = id;
+    if(btn){ btn.textContent='✓'; btn.style.background='var(--red-bg)'; btn.style.borderColor='var(--red)'; btn.title='Click again to confirm delete'; }
+    toast('!','Confirm delete', `Click the delete button again to remove ${p.name}.`);
+    setTimeout(()=>{ if(pendingDelete===id){ pendingDelete=null; renderVaTable(); } }, 4000);
+    return;
+  }
+  pendingDelete = null;
+  await mutate(d=>{
+    const i = d.prospects.findIndex(x=>x.id===id);
+    if(i>-1){ logActivity(d,'status', `Prospect removed: <b>${esc(d.prospects[i].name)}</b>`); d.prospects.splice(i,1); }
+  });
+}
+function openEdit(id){
+  const p = db.prospects.find(x=>x.id===id); if(!p) return;
+  editingId = id;
+  $('e-name').value=p.name; $('e-title').value=p.title||''; $('e-org').value=p.org||'';
+  $('e-link').value=p.linkedin||''; $('e-notes').value=p.notes||''; $('e-cat').value=p.category;
+  $('modal-veil').classList.add('open');
+}
+function closeModal(){ $('modal-veil').classList.remove('open'); editingId=null; }
+async function saveEdit(){
+  const id = editingId; if(!id) return;
+  const name = $('e-name').value.trim();
+  const link = normalizeLink($('e-link').value);
+  if(!name || !link){ toast('!','Missing details','Name and LinkedIn URL are both required.'); return; }
+  await mutate(d=>{
+    const p = d.prospects.find(x=>x.id===id); if(!p) return;
+    p.name=name; p.title=$('e-title').value.trim(); p.org=$('e-org').value.trim();
+    p.linkedin=link; p.notes=$('e-notes').value.trim(); p.category=$('e-cat').value;
+    p.updatedAt=Date.now();
+    logActivity(d,'status', `Details updated for <b>${esc(p.name)}</b>`);
+  });
+  closeModal();
+}
+
+/* ===================== Client portal ===================== */
+function renderClient(){
+  $('cl-strip').innerHTML = stripHtml(true);
+  $('cl-act-strip').innerHTML = activityStripHtml();
+  $('cl-status-breakdown').innerHTML = statusBreakdownHtml();
+  $('cl-status-total').textContent = `${db.prospects.length} total prospects`;
+  $('cl-cards').innerHTML = GROUPS.map(catCardHtml).join('');
+  $('cl-updated').textContent = db.lastUpdated ? `Last update from VA · ${fmtTime(db.lastUpdated)}` : 'Waiting for first update…';
+  const acts = db.activity.slice(0,40);
+  $('cl-activity').innerHTML = acts.length
+    ? acts.map(a=>`<div class="activity-item"><span class="act-dot ${a.type==='add'?'add':''}"></span><span class="act-time">${fmtTime(a.ts)}</span><span class="act-text">${a.text}</span></div>`).join('')
+    : '<div class="empty-state"><b>No activity yet</b>Updates will stream in here as your VA works.</div>';
+  renderClientTable();
+}
+function renderClientTable(){
+  const list = filteredProspects('cl-search','cl-filter-cat','cl-filter-status');
+  $('cl-count').textContent = `${list.length} of ${db.prospects.length} prospects shown`;
+  $('cl-empty').style.display = db.prospects.length ? 'none' : 'block';
+  $('cl-tbody').innerHTML = list.map(p=>{
+    const cat = catById(p.category);
+    return `<tr>
+      <td><div class="p-name">${esc(p.name)}</div><div class="p-meta">${esc([p.title,p.org,p.country].filter(Boolean).join(' · '))}</div></td>
+      <td><span class="cat-chip" style="background:${cat.color}22;color:${cat.color}">${esc(cat.short)}</span></td>
+      <td>${p.linkedin?`<a class="li-link" href="${esc(p.linkedin)}" target="_blank" rel="noopener">in · View profile ↗</a>`:'<span class="p-meta">—</span>'}</td>
+      <td>${statusPill(p.status)}</td>
+      <td class="notes-cell">${esc(p.notes||'')}</td>
+      <td class="p-meta">${fmtDate(p.createdAt)}</td>
+      <td class="p-meta">${fmtTime(p.updatedAt)}</td>
+    </tr>`;
+  }).join('');
+}
+
+/* ===================== real-time sync ===================== */
+function handleIncoming(newDb){
+  const prevUpdated = db.lastUpdated || 0;
+  db = normalizeDb(newDb);
+  const liveEl = $('cl-live');
+  if(liveEl){ liveEl.innerHTML='<span class="live-dot"></span>Live'; liveEl.style.background=''; liveEl.style.color=''; }
+  if((db.lastUpdated||0) !== prevUpdated){
+    renderAll();
+    if(currentPage==='client'){
+      if(clientSeenActivity !== null){
+        const fresh = [];
+        for(const a of db.activity){ if(a.id===clientSeenActivity) break; fresh.push(a); }
+        fresh.slice(0,3).reverse().forEach(a=>{
+          const plain = a.text.replace(/<[^>]+>/g,'');
+          toast(a.type==='add'?'＋':'↺', a.type==='add'?'New prospect added':'Status updated', plain);
+        });
+      }
+      clientSeenActivity = db.activity[0] ? db.activity[0].id : null;
+    }
+  }
+}
+function startRealtime(){
+  if(BACKEND==='firebase'){
+    // push-based: Firebase fires this instantly on every change from any device
+    fbRef.on('value',
+      snap => handleIncoming(snap.exists() ? snap.val() : {}),
+      err  => {
+        console.error('Realtime listener error', err);
+        const liveEl = $('cl-live');
+        if(liveEl){ liveEl.innerHTML='↻ Reconnecting…'; liveEl.style.background='var(--red-bg)'; liveEl.style.color='var(--red)'; }
+        startPolling(); // automatic fallback: keep data fresh by polling until the stream recovers
+      }
+    );
+  }else{
+    startPolling();
+  }
+}
+async function poll(){
+  try{
+    const before = db.lastUpdated || 0;
+    await loadDb();
+    if((db.lastUpdated||0)!==before) handleIncoming(db);
+    else { const liveEl=$('cl-live'); if(liveEl){ liveEl.innerHTML='<span class="live-dot"></span>Live'; liveEl.style.background=''; liveEl.style.color=''; } }
+  }catch(e){
+    const liveEl = $('cl-live');
+    if(liveEl){ liveEl.innerHTML='↻ Reconnecting…'; liveEl.style.background='var(--red-bg)'; liveEl.style.color='var(--red)'; }
+  }
+}
+function startPolling(){
+  if(pollTimer) clearInterval(pollTimer);
+  pollTimer = setInterval(poll, currentPage==='client' ? 4000 : 8000);
+}
+
+/* ===================== toasts ===================== */
+function toast(icon, title, body){
+  const zone = $('toast-zone');
+  const el = document.createElement('div');
+  el.className='toast';
+  el.innerHTML = `<span class="t-icon">${icon}</span><span><span class="t-title">${esc(title)}</span><div class="t-body">${esc(body)}</div></span>`;
+  zone.appendChild(el);
+  setTimeout(()=>{ el.classList.add('leaving'); setTimeout(()=>el.remove(), 320); }, 4600);
+}
+
+/* ===================== navigation ===================== */
+function go(page){
+  currentPage = page;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  $('page-'+page).classList.add('active');
+  window.scrollTo(0,0);
+  if(page==='client'){ clientSeenActivity = db.activity[0] ? db.activity[0].id : null; }
+  renderAll();
+  if(BACKEND!=='firebase') startPolling();
+}
+function renderAll(){
+  if(currentPage==='va') renderVa();
+  if(currentPage==='client') renderClient();
+}
+
+/* ===================== preloaded prospect database ===================== */
+const SEED_VERSION = 'xlsx-speaking-v1';
+const SEED_DATA = [{"seedId":"xlsx1-1","name":"John Chen","title":"Founder & CEO","org":"Geoteaming","country":"United States","orgType":"Event & team engagement","linkedin":"https://www.linkedin.com/in/ceojohnchen","status":"Not Contacted","notes":""},{"seedId":"xlsx1-2","name":"Karen Nedbal","title":"Executive Director","org":"ACCED-I","country":"United States","orgType":"Professional association / collegiate events","linkedin":"https://www.linkedin.com/in/karen-nedbal","status":"Not Contacted","notes":""},{"seedId":"xlsx1-3","name":"Satish Kavirajan","title":"Founder & Managing Director","org":"Actionable Intelligence Network","country":"United States","orgType":"Conference development","linkedin":"https://www.linkedin.com/in/satish-kavirajan-1388b","status":"Not Contacted","notes":""},{"seedId":"xlsx1-4","name":"Steve Markman","title":"President & Founder","org":"Markman Speaker Management","country":"United States","orgType":"Speaker management","linkedin":"https://www.linkedin.com/in/stevemarkman","status":"Not Contacted","notes":""},{"seedId":"xlsx1-5","name":"Stuart MacNaught","title":"Co-President / Founder / Producer","org":"FestForums","country":"United States","orgType":"Conference organizer","linkedin":"https://www.linkedin.com/in/stuart-macnaught-549436b7","status":"Not Contacted","notes":""},{"seedId":"xlsx1-6","name":"Dejah Urbanovitch","title":"CEO","org":"Speechless Speaker Bureau","country":"United States","orgType":"Speaker bureau","linkedin":"https://www.linkedin.com/in/dejahurbanovitch","status":"Not Contacted","notes":""},{"seedId":"xlsx1-7","name":"Cathleen Fillmore","title":"Founder & President","org":"Speakers Gold","country":"Canada","orgType":"Speaker bureau","linkedin":"https://ca.linkedin.com/in/cathleen-fillmore","status":"Not Contacted","notes":""},{"seedId":"xlsx1-8","name":"Leila Mustonen","title":"President","org":"Compass Conference Management","country":"Canada","orgType":"Professional conference organizer","linkedin":"https://ca.linkedin.com/in/compass1","status":"Not Contacted","notes":""},{"seedId":"xlsx1-9","name":"Chantel Beaupre","title":"CEO","org":"Say Something Communications","country":"Canada","orgType":"Professional conference organizer","linkedin":"https://ca.linkedin.com/in/chantel-beaupre-3687753","status":"Not Contacted","notes":""},{"seedId":"xlsx1-10","name":"Andrew Vine","title":"Founder & CEO","org":"The Insight Bureau","country":"Singapore","orgType":"Speaker bureau","linkedin":"https://sg.linkedin.com/in/andrewvine","status":"Not Contacted","notes":""},{"seedId":"xlsx1-11","name":"Paul Mc Connon","title":"CEO","org":"Unique Speaker Bureau International","country":"South Africa","orgType":"Speaker bureau","linkedin":"https://za.linkedin.com/in/paul-mc-connon-9215aa12","status":"Not Contacted","notes":""},{"seedId":"xlsx1-12","name":"Kate Robertson","title":"Co-Founder & CEO","org":"One Young World","country":"United Kingdom","orgType":"Global summit organizer","linkedin":"https://uk.linkedin.com/in/kate-robertson-492b8769","status":"Not Contacted","notes":""},{"seedId":"xlsx1-13","name":"Susan Gavin","title":"Founder","org":"Speaker Solutions","country":"Ireland","orgType":"Speaker bureau","linkedin":"https://ie.linkedin.com/in/susangavin10","status":"Not Contacted","notes":""},{"seedId":"xlsx1-14","name":"Tracy Stuckrath","title":"President & Founder","org":"thrive! meetings & events","country":"United States","orgType":"Meetings and events","linkedin":"https://www.linkedin.com/in/tracystuckrath","status":"Not Contacted","notes":""},{"seedId":"xlsx1-15","name":"Billy Boughey","title":"Founder & President","org":"Elevate Experiences","country":"United States","orgType":"Event production","linkedin":"https://www.linkedin.com/in/billy-boughey","status":"Not Contacted","notes":""},{"seedId":"xlsx1-16","name":"Lucretia Williams","title":"President & CEO","org":"Distinct Event Planning","country":"United States","orgType":"Event management","linkedin":"https://www.linkedin.com/in/distincteventplanning","status":"Not Contacted","notes":""},{"seedId":"xlsx1-17","name":"Elizabeth Hooper","title":"President & CEO","org":"Events & Management Plus","country":"Canada","orgType":"Association and event management","linkedin":"https://ca.linkedin.com/in/elizabeth-hooper-28667330","status":"Not Contacted","notes":""},{"seedId":"xlsx1-18","name":"Nick Henry","title":"Founder & CEO","org":"Climate Action","country":"United Kingdom","orgType":"Climate conferences","linkedin":"https://uk.linkedin.com/in/nick-henry-85609b19","status":"Not Contacted","notes":""},{"seedId":"xlsx1-19","name":"Matthew Swift","title":"Co-Founder, President & CEO","org":"Concordia","country":"United States","orgType":"Annual summit organizer","linkedin":"https://www.linkedin.com/in/matthew-swift-8ba7529","status":"Not Contacted","notes":""},{"seedId":"xlsx1-20","name":"Abiola Oke","title":"CEO & Board Chair","org":"PTTOW!","country":"United States","orgType":"Executive summit community","linkedin":"https://www.linkedin.com/in/abiolaoke","status":"Not Contacted","notes":""},{"seedId":"xlsx1-21","name":"Mandy Balak","title":"President","org":"The Gathering Festival","country":"Canada","orgType":"Leadership festival","linkedin":"https://ca.linkedin.com/in/mandybalak","status":"Not Contacted","notes":""},{"seedId":"xlsx1-22","name":"Frode Odegard","title":"Chairman & CEO","org":"Post-Industrial Institute","country":"United States","orgType":"Forum and institute events","linkedin":"https://www.linkedin.com/in/odegard","status":"Not Contacted","notes":""},{"seedId":"xlsx1-23","name":"Jamie Timperley","title":"President","org":"Dynamic Events","country":"United States","orgType":"Event management","linkedin":"https://www.linkedin.com/in/jamie-timperley-86263518","status":"Not Contacted","notes":""},{"seedId":"xlsx1-24","name":"Savannah Fraser","title":"Founder & CEO","org":"Impactful Events Co.","country":"United States","orgType":"B2B event management","linkedin":"https://www.linkedin.com/in/savannah-fraser","status":"Not Contacted","notes":""},{"seedId":"xlsx1-25","name":"Andrew Roby","title":"President","org":"Andrew Roby Events","country":"United States","orgType":"Corporate events","linkedin":"https://www.linkedin.com/in/andrewrobyeventplanner","status":"Not Contacted","notes":""},{"seedId":"xlsx1-26","name":"Christy Sprowl","title":"Founder & CEO","org":"Prestige Event Service","country":"United States","orgType":"Corporate event staffing","linkedin":"https://www.linkedin.com/in/christy-sprowl","status":"Not Contacted","notes":""},{"seedId":"xlsx1-27","name":"Jeff Lohnes","title":"Partner","org":"Talent Bureau","country":"Canada","orgType":"Speaker bureau","linkedin":"https://ca.linkedin.com/in/jefflohnes","status":"Not Contacted","notes":""},{"seedId":"xlsx1-28","name":"Shirley Hogsett","title":"CEO","org":"Destiny Speaks","country":"United States","orgType":"Speaker bureau","linkedin":"https://www.linkedin.com/in/shirleyhogsett","status":"Not Contacted","notes":""},{"seedId":"xlsx1-29","name":"Dawn Donahue","title":"Founder","org":"Go Golf Conference and Events Management","country":"Canada","orgType":"Conference management","linkedin":"https://ca.linkedin.com/in/dawndonahue","status":"Not Contacted","notes":""},{"seedId":"xlsx1-30","name":"Kelly Helfman","title":"Founder","org":"Kelly Helfman Events","country":"United States","orgType":"Event production and moderation","linkedin":"https://www.linkedin.com/in/kelly-helfman","status":"Not Contacted","notes":""},{"seedId":"xlsx1-31","name":"Chris Sinclair","title":"President & CEO","org":"The Anthem Group","country":"United States","orgType":"Events and experiences","linkedin":"https://www.linkedin.com/in/chrissinclair24","status":"Not Contacted","notes":""},{"seedId":"xlsx1-32","name":"Alonda Williams","title":"President & CEO","org":"Big Brothers Big Sisters of Puget Sound","country":"United States","orgType":"Nonprofit events / TEDx","linkedin":"https://www.linkedin.com/in/alondawilliams","status":"Not Contacted","notes":""},{"seedId":"xlsx1-33","name":"Manu Meel","title":"CEO & Co-Founder","org":"BridgeUSA","country":"United States","orgType":"Nonprofit convenings","linkedin":"https://www.linkedin.com/in/manu-meel-430b83a3","status":"Not Contacted","notes":""},{"seedId":"xlsx1-34","name":"David Nelson","title":"Executive Director","org":"FoundersForge","country":"United States","orgType":"Founder events","linkedin":"https://www.linkedin.com/in/davidrnelson","status":"Not Contacted","notes":""},{"seedId":"xlsx1-35","name":"Dan Young","title":"Founding Executive Director","org":"I.D.E.A.","country":"United States","orgType":"Education nonprofit / TEDx","linkedin":"https://www.linkedin.com/in/danyoungphd","status":"Not Contacted","notes":""},{"seedId":"xlsx1-36","name":"Larkin O’Leary","title":"Executive Director","org":"Common Ground Society","country":"United States","orgType":"Nonprofit events / TEDx","linkedin":"https://www.linkedin.com/in/larkin-o-leary-83a4031b7","status":"Not Contacted","notes":""},{"seedId":"xlsx1-37","name":"Tekoa Pouerie","title":"President & CEO","org":"The Sharing Center","country":"United States","orgType":"Nonprofit events","linkedin":"https://www.linkedin.com/in/tekoa-pouerie-359659101","status":"Not Contacted","notes":""},{"seedId":"xlsx1-38","name":"Jennifer Buchanan","title":"Founder, President & CEO","org":"The Music Advantage","country":"Canada","orgType":"Professional programs and keynotes","linkedin":"https://ca.linkedin.com/in/jenniferbuchananinc","status":"Not Contacted","notes":""},{"seedId":"xlsx1-39","name":"Omar Al Busaidy","title":"President","org":"Global Shapers-related leadership initiatives","country":"United Arab Emirates","orgType":"Leadership forums","linkedin":"https://ae.linkedin.com/in/omaralbusaidy","status":"Not Contacted","notes":""},{"seedId":"xlsx1-40","name":"Susan Chee","title":"Director, Events & Marketing Services","org":"Criteria & Connections","country":"Malaysia","orgType":"Professional conference organizer","linkedin":"https://my.linkedin.com/in/susan-chee-033596a","status":"Not Contacted","notes":""},{"seedId":"xlsx1-41","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"World Economic Forum","country":"Switzerland","orgType":"Global forum","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20World%20Economic%20Forum","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.weforum.org/events/"},{"seedId":"xlsx1-42","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"TED Conferences","country":"United States","orgType":"Conference platform","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20TED%20Conferences","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.ted.com/attend/conferences"},{"seedId":"xlsx1-43","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"SXSW","country":"United States","orgType":"Festival & conference","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20SXSW","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.sxsw.com/"},{"seedId":"xlsx1-44","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Web Summit","country":"Portugal","orgType":"Technology conference","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Web%20Summit","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://websummit.com/"},{"seedId":"xlsx1-45","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Slush","country":"Finland","orgType":"Startup conference","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Slush","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://slush.org/"},{"seedId":"xlsx1-46","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Collision","country":"Canada","orgType":"Technology conference","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Collision","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://collisionconf.com/"},{"seedId":"xlsx1-47","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Viva Technology","country":"France","orgType":"Technology conference","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Viva%20Technology","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://vivatechnology.com/"},{"seedId":"xlsx1-48","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Money20/20","country":"United States","orgType":"Fintech conference","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Money20%2F20","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.money2020.com/"},{"seedId":"xlsx1-49","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Dreamforce","country":"United States","orgType":"Corporate technology event","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Dreamforce","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.salesforce.com/dreamforce/"},{"seedId":"xlsx1-50","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"INBOUND","country":"United States","orgType":"Marketing conference","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20INBOUND","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.inbound.com/"},{"seedId":"xlsx1-51","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Content Marketing Institute","country":"United States","orgType":"Marketing association/events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Content%20Marketing%20Institute","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.contentmarketingworld.com/"},{"seedId":"xlsx1-52","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Social Media Examiner","country":"United States","orgType":"Marketing conference","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Social%20Media%20Examiner","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.socialmediaexaminer.com/smmworld/"},{"seedId":"xlsx1-53","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Gartner Conferences","country":"United States","orgType":"Executive conferences","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Gartner%20Conferences","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.gartner.com/en/conferences"},{"seedId":"xlsx1-54","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Forrester Events","country":"United States","orgType":"Executive events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Forrester%20Events","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.forrester.com/events/"},{"seedId":"xlsx1-55","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Fast Company Innovation Festival","country":"United States","orgType":"Business festival","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Fast%20Company%20Innovation%20Festival","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://events.fastcompany.com/"},{"seedId":"xlsx1-56","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Inc. 5000 Conference","country":"United States","orgType":"Business conference","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Inc.%205000%20Conference","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://conference.inc.com/"},{"seedId":"xlsx1-57","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Fortune Conferences","country":"United States","orgType":"Executive conferences","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Fortune%20Conferences","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://fortune.com/conferences/"},{"seedId":"xlsx1-58","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"The Economist Events","country":"United Kingdom","orgType":"Executive forums","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20The%20Economist%20Events","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://events.economist.com/"},{"seedId":"xlsx1-59","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Financial Times Live","country":"United Kingdom","orgType":"Executive forums","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Financial%20Times%20Live","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://live.ft.com/"},{"seedId":"xlsx1-60","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Reuters Events","country":"United Kingdom","orgType":"Business conferences","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Reuters%20Events","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.reutersevents.com/"},{"seedId":"xlsx1-61","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Cannes Lions","country":"France","orgType":"Marketing festival","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Cannes%20Lions","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.canneslions.com/"},{"seedId":"xlsx1-62","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Advertising Week","country":"United States","orgType":"Marketing conference","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Advertising%20Week","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://advertisingweek.com/"},{"seedId":"xlsx1-63","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Shoptalk","country":"United States","orgType":"Retail conference","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Shoptalk","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://shoptalk.com/"},{"seedId":"xlsx1-64","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"CES / Consumer Technology Association","country":"United States","orgType":"Technology trade association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20CES%20%2F%20Consumer%20Technology%20Association","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.ces.tech/"},{"seedId":"xlsx1-65","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Mobile World Congress / GSMA","country":"Spain","orgType":"Technology association conference","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Mobile%20World%20Congress%20%2F%20GSMA","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.mwcbarcelona.com/"},{"seedId":"xlsx1-66","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"RSA Conference","country":"United States","orgType":"Cybersecurity conference","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20RSA%20Conference","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.rsaconference.com/"},{"seedId":"xlsx1-67","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Black Hat","country":"United States","orgType":"Cybersecurity conference","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Black%20Hat","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.blackhat.com/"},{"seedId":"xlsx1-68","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"DEF CON","country":"United States","orgType":"Cybersecurity conference","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20DEF%20CON","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://defcon.org/"},{"seedId":"xlsx1-69","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"TechCrunch Disrupt","country":"United States","orgType":"Startup conference","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20TechCrunch%20Disrupt","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://techcrunch.com/events/"},{"seedId":"xlsx1-70","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"South Summit","country":"Spain","orgType":"Startup conference","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20South%20Summit","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.southsummit.io/"},{"seedId":"xlsx1-71","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Startup Grind","country":"United States","orgType":"Founder community/events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Startup%20Grind","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.startupgrind.com/events/"},{"seedId":"xlsx1-72","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Entrepreneur Organization","country":"United States","orgType":"Executive association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Entrepreneur%20Organization","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://hub.eonetwork.org/"},{"seedId":"xlsx1-73","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Young Presidents Organization","country":"United States","orgType":"CEO peer network","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Young%20Presidents%20Organization","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.ypo.org/events/"},{"seedId":"xlsx1-74","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Vistage Worldwide","country":"United States","orgType":"CEO peer network","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Vistage%20Worldwide","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.vistage.com/events/"},{"seedId":"xlsx1-75","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Chief Executives Organization","country":"United States","orgType":"Executive association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Chief%20Executives%20Organization","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.ceo.org/"},{"seedId":"xlsx1-76","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Association for Talent Development","country":"United States","orgType":"Professional association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Association%20for%20Talent%20Development","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://atdconference.td.org/"},{"seedId":"xlsx1-77","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Society for Human Resource Management","country":"United States","orgType":"Professional association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Society%20for%20Human%20Resource%20Management","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://annual.shrm.org/"},{"seedId":"xlsx1-78","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Project Management Institute","country":"United States","orgType":"Professional association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Project%20Management%20Institute","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.pmi.org/events"},{"seedId":"xlsx1-79","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"American Marketing Association","country":"United States","orgType":"Professional association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20American%20Marketing%20Association","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.ama.org/events/"},{"seedId":"xlsx1-80","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Public Relations Society of America","country":"United States","orgType":"Professional association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Public%20Relations%20Society%20of%20America","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.prsa.org/conferences-and-awards"},{"seedId":"xlsx1-81","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"National Speakers Association","country":"United States","orgType":"Speaker association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20National%20Speakers%20Association","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://nsaspeaker.org/events/"},{"seedId":"xlsx1-82","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Professional Convention Management Association","country":"United States","orgType":"Events association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Professional%20Convention%20Management%20Association","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.pcma.org/events/"},{"seedId":"xlsx1-83","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Meeting Professionals International","country":"United States","orgType":"Events association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Meeting%20Professionals%20International","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.mpi.org/events"},{"seedId":"xlsx1-84","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"International Live Events Association","country":"United States","orgType":"Events association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20International%20Live%20Events%20Association","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.ileahub.com/"},{"seedId":"xlsx1-85","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"International Association of Exhibitions and Events","country":"United States","orgType":"Events association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20International%20Association%20of%20Exhibitions%20and%20Events","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.iaee.com/events/"},{"seedId":"xlsx1-86","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"American Society of Association Executives","country":"United States","orgType":"Association executives","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20American%20Society%20of%20Association%20Executives","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.asaecenter.org/events"},{"seedId":"xlsx1-87","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Council of Engineering and Scientific Society Executives","country":"United States","orgType":"Association executives","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Council%20of%20Engineering%20and%20Scientific%20Society%20Executives","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.cessee.org/"},{"seedId":"xlsx1-88","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"International Association of Business Communicators","country":"United States","orgType":"Professional association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20International%20Association%20of%20Business%20Communicators","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.iabc.com/events"},{"seedId":"xlsx1-89","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"National Association of Corporate Directors","country":"United States","orgType":"Board association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20National%20Association%20of%20Corporate%20Directors","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.nacdonline.org/events/"},{"seedId":"xlsx1-90","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Chief Executive Network","country":"United States","orgType":"Executive network","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Chief%20Executive%20Network","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://chiefexecutivenetwork.com/events/"},{"seedId":"xlsx1-91","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"American Bankers Association","country":"United States","orgType":"Banking association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20American%20Bankers%20Association","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.aba.com/training-events"},{"seedId":"xlsx1-92","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"American Medical Association","country":"United States","orgType":"Medical association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20American%20Medical%20Association","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.ama-assn.org/events"},{"seedId":"xlsx1-93","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"American Hospital Association","country":"United States","orgType":"Healthcare association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20American%20Hospital%20Association","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.aha.org/education-events"},{"seedId":"xlsx1-94","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Healthcare Information and Management Systems Society","country":"United States","orgType":"Healthcare technology association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Healthcare%20Information%20and%20Management%20Systems%20Society","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.himss.org/global-conference"},{"seedId":"xlsx1-95","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"American Nurses Association","country":"United States","orgType":"Nursing association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20American%20Nurses%20Association","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.nursingworld.org/education-events/"},{"seedId":"xlsx1-96","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"American Public Health Association","country":"United States","orgType":"Public health association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20American%20Public%20Health%20Association","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.apha.org/events-and-meetings"},{"seedId":"xlsx1-97","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Biotechnology Innovation Organization","country":"United States","orgType":"Biotechnology association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Biotechnology%20Innovation%20Organization","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.bio.org/events"},{"seedId":"xlsx1-98","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"AdvaMed","country":"United States","orgType":"Medical technology association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20AdvaMed","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.advamed.org/events/"},{"seedId":"xlsx1-99","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"National Association of Manufacturers","country":"United States","orgType":"Manufacturing association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20National%20Association%20of%20Manufacturers","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://nam.org/events/"},{"seedId":"xlsx1-100","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"U.S. Chamber of Commerce","country":"United States","orgType":"Business association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20U.S.%20Chamber%20of%20Commerce","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.uschamber.com/events"},{"seedId":"xlsx1-101","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"British Chambers of Commerce","country":"United Kingdom","orgType":"Business association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20British%20Chambers%20of%20Commerce","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.britishchambers.org.uk/events/"},{"seedId":"xlsx1-102","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Confederation of British Industry","country":"United Kingdom","orgType":"Business association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Confederation%20of%20British%20Industry","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.cbi.org.uk/events/"},{"seedId":"xlsx1-103","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Federation of Small Businesses","country":"United Kingdom","orgType":"Business association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Federation%20of%20Small%20Businesses","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.fsb.org.uk/event-calendar.html"},{"seedId":"xlsx1-104","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Institute of Directors","country":"United Kingdom","orgType":"Director association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Institute%20of%20Directors","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.iod.com/events/"},{"seedId":"xlsx1-105","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Chartered Institute of Marketing","country":"United Kingdom","orgType":"Marketing association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Chartered%20Institute%20of%20Marketing","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.cim.co.uk/events/"},{"seedId":"xlsx1-106","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"CIPD","country":"United Kingdom","orgType":"HR association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20CIPD","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.cipd.org/en/events/"},{"seedId":"xlsx1-107","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Chartered Management Institute","country":"United Kingdom","orgType":"Management association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Chartered%20Management%20Institute","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.managers.org.uk/events/"},{"seedId":"xlsx1-108","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Association of MBAs","country":"United Kingdom","orgType":"Business education association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Association%20of%20MBAs","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.associationofmbas.com/events/"},{"seedId":"xlsx1-109","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"World Business Council for Sustainable Development","country":"Switzerland","orgType":"Business sustainability network","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20World%20Business%20Council%20for%20Sustainable%20Development","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.wbcsd.org/events/"},{"seedId":"xlsx1-110","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"International Chamber of Commerce","country":"France","orgType":"Global business association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20International%20Chamber%20of%20Commerce","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://iccwbo.org/events/"},{"seedId":"xlsx1-111","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"United Nations Global Compact","country":"United States","orgType":"Global business network","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20United%20Nations%20Global%20Compact","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://unglobalcompact.org/take-action/events"},{"seedId":"xlsx1-112","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"World Federation of Advertisers","country":"Belgium","orgType":"Marketing association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20World%20Federation%20of%20Advertisers","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://wfanet.org/events"},{"seedId":"xlsx1-113","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"European Business Summit","country":"Belgium","orgType":"Business summit","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20European%20Business%20Summit","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://ebsummit.eu/"},{"seedId":"xlsx1-114","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"European Women on Boards","country":"Belgium","orgType":"Leadership nonprofit","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20European%20Women%20on%20Boards","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://europeanwomenonboards.eu/events/"},{"seedId":"xlsx1-115","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Women in Tech Global","country":"France","orgType":"Technology nonprofit","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Women%20in%20Tech%20Global","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://women-in-tech.org/events/"},{"seedId":"xlsx1-116","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Women’s Forum for the Economy & Society","country":"France","orgType":"Leadership forum","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Women%E2%80%99s%20Forum%20for%20the%20Economy%20%26%20Society","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.womens-forum.com/"},{"seedId":"xlsx1-117","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Global Entrepreneurship Network","country":"United States","orgType":"Entrepreneurship nonprofit","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Global%20Entrepreneurship%20Network","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.genglobal.org/events"},{"seedId":"xlsx1-118","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Ashoka","country":"United States","orgType":"Social entrepreneurship nonprofit","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Ashoka","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.ashoka.org/en-us/events"},{"seedId":"xlsx1-119","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Skoll Foundation","country":"United States","orgType":"Social impact foundation","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Skoll%20Foundation","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://skoll.org/skoll-world-forum/"},{"seedId":"xlsx1-120","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Clinton Global Initiative","country":"United States","orgType":"Global convening","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Clinton%20Global%20Initiative","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.clintonfoundation.org/clinton-global-initiative/"},{"seedId":"xlsx1-121","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Milken Institute","country":"United States","orgType":"Economic think tank/events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Milken%20Institute","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://milkeninstitute.org/events"},{"seedId":"xlsx1-122","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Aspen Institute","country":"United States","orgType":"Policy institute/events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Aspen%20Institute","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.aspeninstitute.org/events/"},{"seedId":"xlsx1-123","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Brookings Institution","country":"United States","orgType":"Think tank/events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Brookings%20Institution","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.brookings.edu/events/"},{"seedId":"xlsx1-124","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Atlantic Council","country":"United States","orgType":"Think tank/events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Atlantic%20Council","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.atlanticcouncil.org/events/"},{"seedId":"xlsx1-125","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Council on Foreign Relations","country":"United States","orgType":"Policy association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Council%20on%20Foreign%20Relations","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.cfr.org/events"},{"seedId":"xlsx1-126","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Chatham House","country":"United Kingdom","orgType":"Think tank/events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Chatham%20House","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.chathamhouse.org/events"},{"seedId":"xlsx1-127","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Royal Institute of International Affairs","country":"United Kingdom","orgType":"Policy institute","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Royal%20Institute%20of%20International%20Affairs","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.chathamhouse.org/events"},{"seedId":"xlsx1-128","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Carnegie Endowment for International Peace","country":"United States","orgType":"Think tank/events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Carnegie%20Endowment%20for%20International%20Peace","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://carnegieendowment.org/events"},{"seedId":"xlsx1-129","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Center for Strategic and International Studies","country":"United States","orgType":"Think tank/events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Center%20for%20Strategic%20and%20International%20Studies","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.csis.org/events"},{"seedId":"xlsx1-130","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"World Resources Institute","country":"United States","orgType":"Climate nonprofit/events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20World%20Resources%20Institute","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.wri.org/events"},{"seedId":"xlsx1-131","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Climate Group","country":"United Kingdom","orgType":"Climate nonprofit/events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Climate%20Group","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.theclimategroup.org/events"},{"seedId":"xlsx1-132","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"C40 Cities","country":"United Kingdom","orgType":"Climate network/events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20C40%20Cities","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.c40.org/events/"},{"seedId":"xlsx1-133","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"GreenBiz","country":"United States","orgType":"Sustainability media/events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20GreenBiz","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.greenbiz.com/events"},{"seedId":"xlsx1-134","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Bloomberg Live","country":"United States","orgType":"Executive events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Bloomberg%20Live","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.bloomberglive.com/"},{"seedId":"xlsx1-135","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Axios Events","country":"United States","orgType":"Executive events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Axios%20Events","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.axios.com/events"},{"seedId":"xlsx1-136","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Semafor Events","country":"United States","orgType":"Executive events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Semafor%20Events","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.semafor.com/events"},{"seedId":"xlsx1-137","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"POLITICO Events","country":"United States","orgType":"Policy events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20POLITICO%20Events","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.politico.com/events"},{"seedId":"xlsx1-138","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Devex Events","country":"United States","orgType":"Global development events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Devex%20Events","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.devex.com/events"},{"seedId":"xlsx1-139","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Global Citizen","country":"United States","orgType":"Nonprofit festivals/events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Global%20Citizen","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.globalcitizen.org/en/events/"},{"seedId":"xlsx1-140","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Concordia Summit","country":"United States","orgType":"Global summit","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Concordia%20Summit","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.concordia.net/annualsummit/"},{"seedId":"xlsx1-141","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Harvard Business School","country":"United States","orgType":"University executive events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Harvard%20Business%20School","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.hbs.edu/events/"},{"seedId":"xlsx1-142","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Stanford Graduate School of Business","country":"United States","orgType":"University executive events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Stanford%20Graduate%20School%20of%20Business","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.gsb.stanford.edu/events"},{"seedId":"xlsx1-143","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"MIT Sloan School of Management","country":"United States","orgType":"University executive events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20MIT%20Sloan%20School%20of%20Management","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://mitsloan.mit.edu/events"},{"seedId":"xlsx1-144","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Wharton School","country":"United States","orgType":"University executive events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Wharton%20School","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://events.wharton.upenn.edu/"},{"seedId":"xlsx1-145","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Columbia Business School","country":"United States","orgType":"University executive events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Columbia%20Business%20School","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://business.columbia.edu/events"},{"seedId":"xlsx1-146","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"NYU Stern School of Business","country":"United States","orgType":"University executive events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20NYU%20Stern%20School%20of%20Business","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.stern.nyu.edu/experience-stern/news-events/events"},{"seedId":"xlsx1-147","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"London Business School","country":"United Kingdom","orgType":"University executive events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20London%20Business%20School","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.london.edu/events"},{"seedId":"xlsx1-148","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"INSEAD","country":"France","orgType":"University executive events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20INSEAD","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.insead.edu/events"},{"seedId":"xlsx1-149","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Oxford Saïd Business School","country":"United Kingdom","orgType":"University executive events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Oxford%20Sa%C3%AFd%20Business%20School","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.sbs.ox.ac.uk/events"},{"seedId":"xlsx1-150","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Cambridge Judge Business School","country":"United Kingdom","orgType":"University executive events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Cambridge%20Judge%20Business%20School","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.jbs.cam.ac.uk/events/"},{"seedId":"xlsx1-151","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"National University of Singapore Business School","country":"Singapore","orgType":"University executive events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20National%20University%20of%20Singapore%20Business%20School","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://bschool.nus.edu.sg/events/"},{"seedId":"xlsx1-152","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Hong Kong University of Science and Technology Business School","country":"Hong Kong","orgType":"University executive events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Hong%20Kong%20University%20of%20Science%20and%20Technology%20Business%20School","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://bm.hkust.edu.hk/events"},{"seedId":"xlsx1-153","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Melbourne Business School","country":"Australia","orgType":"University executive events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Melbourne%20Business%20School","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://mbs.edu/events/"},{"seedId":"xlsx1-154","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"University of Sydney Business School","country":"Australia","orgType":"University executive events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20University%20of%20Sydney%20Business%20School","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.sydney.edu.au/business/news-and-events/events.html"},{"seedId":"xlsx1-155","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Asian Institute of Management","country":"Philippines","orgType":"University executive events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Asian%20Institute%20of%20Management","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://aim.edu/events/"},{"seedId":"xlsx1-156","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Ateneo Graduate School of Business","country":"Philippines","orgType":"University executive events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Ateneo%20Graduate%20School%20of%20Business","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.ateneo.edu/agsb"},{"seedId":"xlsx1-157","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"De La Salle University","country":"Philippines","orgType":"University events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20De%20La%20Salle%20University","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.dlsu.edu.ph/events/"},{"seedId":"xlsx1-158","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"University of the Philippines","country":"Philippines","orgType":"University events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20University%20of%20the%20Philippines","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://up.edu.ph/events/"},{"seedId":"xlsx1-159","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Singapore Management University","country":"Singapore","orgType":"University events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Singapore%20Management%20University","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.smu.edu.sg/events"},{"seedId":"xlsx1-160","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"University of Toronto Rotman School","country":"Canada","orgType":"University executive events","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20University%20of%20Toronto%20Rotman%20School","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.rotman.utoronto.ca/Connect/Events"},{"seedId":"xlsx1-161","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Canadian Marketing Association","country":"Canada","orgType":"Marketing association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Canadian%20Marketing%20Association","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://thecma.ca/events"},{"seedId":"xlsx1-162","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Canadian Chamber of Commerce","country":"Canada","orgType":"Business association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Canadian%20Chamber%20of%20Commerce","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://chamber.ca/events/"},{"seedId":"xlsx1-163","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Business Council of Canada","country":"Canada","orgType":"Executive association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Business%20Council%20of%20Canada","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://thebusinesscouncil.ca/events/"},{"seedId":"xlsx1-164","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Australian HR Institute","country":"Australia","orgType":"HR association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Australian%20HR%20Institute","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.ahri.com.au/events"},{"seedId":"xlsx1-165","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Australian Institute of Company Directors","country":"Australia","orgType":"Director association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Australian%20Institute%20of%20Company%20Directors","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.aicd.com.au/events.html"},{"seedId":"xlsx1-166","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Business Council of Australia","country":"Australia","orgType":"Business association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Business%20Council%20of%20Australia","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.bca.com.au/"},{"seedId":"xlsx1-167","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Singapore Business Federation","country":"Singapore","orgType":"Business association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Singapore%20Business%20Federation","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.sbf.org.sg/events"},{"seedId":"xlsx1-168","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Singapore Human Resources Institute","country":"Singapore","orgType":"HR association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Singapore%20Human%20Resources%20Institute","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://shri.org.sg/events/"},{"seedId":"xlsx1-169","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Hong Kong General Chamber of Commerce","country":"Hong Kong","orgType":"Business association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Hong%20Kong%20General%20Chamber%20of%20Commerce","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.chamber.org.hk/en/events/"},{"seedId":"xlsx1-170","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Philippine Chamber of Commerce and Industry","country":"Philippines","orgType":"Business association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Philippine%20Chamber%20of%20Commerce%20and%20Industry","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.philippinechamber.com/"},{"seedId":"xlsx1-171","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Management Association of the Philippines","country":"Philippines","orgType":"Management association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Management%20Association%20of%20the%20Philippines","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://map.org.ph/"},{"seedId":"xlsx1-172","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"People Management Association of the Philippines","country":"Philippines","orgType":"HR association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20People%20Management%20Association%20of%20the%20Philippines","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://pmap.org.ph/"},{"seedId":"xlsx1-173","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Philippine Marketing Association","country":"Philippines","orgType":"Marketing association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Philippine%20Marketing%20Association","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://philippinemarketing.org/"},{"seedId":"xlsx1-174","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"IT and Business Process Association of the Philippines","country":"Philippines","orgType":"Technology association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20IT%20and%20Business%20Process%20Association%20of%20the%20Philippines","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.ibpap.org/events"},{"seedId":"xlsx1-175","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"FinTech Alliance Philippines","country":"Philippines","orgType":"Fintech association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20FinTech%20Alliance%20Philippines","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://fintechalliance.ph/"},{"seedId":"xlsx1-176","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"European Chamber of Commerce of the Philippines","country":"Philippines","orgType":"Business association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20European%20Chamber%20of%20Commerce%20of%20the%20Philippines","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://eccp.com/events"},{"seedId":"xlsx1-177","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"American Chamber of Commerce of the Philippines","country":"Philippines","orgType":"Business association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20American%20Chamber%20of%20Commerce%20of%20the%20Philippines","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.amchamphilippines.com/events"},{"seedId":"xlsx1-178","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Makati Business Club","country":"Philippines","orgType":"Business association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Makati%20Business%20Club","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://mbc.com.ph/"},{"seedId":"xlsx1-179","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Global Shapers Community","country":"Switzerland","orgType":"Leadership network","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Global%20Shapers%20Community","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.globalshapers.org/"},{"seedId":"xlsx1-180","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Junior Chamber International","country":"United States","orgType":"Leadership nonprofit","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Junior%20Chamber%20International","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://jci.cc/en/events/"},{"seedId":"xlsx1-181","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Rotary International","country":"United States","orgType":"Service association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Rotary%20International","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.rotary.org/en/our-programs/conventions"},{"seedId":"xlsx1-182","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Toastmasters International","country":"United States","orgType":"Professional association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Toastmasters%20International","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.toastmasters.org/events"},{"seedId":"xlsx1-183","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"IEEE","country":"United States","orgType":"Engineering association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20IEEE","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.ieee.org/conferences/index.html"},{"seedId":"xlsx1-184","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Association for Computing Machinery","country":"United States","orgType":"Computing association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Association%20for%20Computing%20Machinery","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.acm.org/conferences"},{"seedId":"xlsx1-185","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"ISACA","country":"United States","orgType":"Technology association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20ISACA","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.isaca.org/training-and-events"},{"seedId":"xlsx1-186","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"CompTIA","country":"United States","orgType":"Technology association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20CompTIA","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.comptia.org/events/"},{"seedId":"xlsx1-187","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Linux Foundation","country":"United States","orgType":"Technology nonprofit","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Linux%20Foundation","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://events.linuxfoundation.org/"},{"seedId":"xlsx1-188","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Open Source Initiative","country":"United States","orgType":"Technology nonprofit","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Open%20Source%20Initiative","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://opensource.org/events/"},{"seedId":"xlsx1-189","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Cloud Native Computing Foundation","country":"United States","orgType":"Technology nonprofit","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Cloud%20Native%20Computing%20Foundation","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.cncf.io/events/"},{"seedId":"xlsx1-190","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Women Who Code","country":"United States","orgType":"Technology nonprofit","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Women%20Who%20Code","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.womenwhocode.com/events"},{"seedId":"xlsx1-191","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"AnitaB.org","country":"United States","orgType":"Technology nonprofit","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20AnitaB.org","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://anitab.org/events/"},{"seedId":"xlsx1-192","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Society of Women Engineers","country":"United States","orgType":"Engineering association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Society%20of%20Women%20Engineers","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://swe.org/events/"},{"seedId":"xlsx1-193","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"National Society of Black Engineers","country":"United States","orgType":"Engineering nonprofit","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20National%20Society%20of%20Black%20Engineers","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://convention.nsbe.org/"},{"seedId":"xlsx1-194","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"American Society of Civil Engineers","country":"United States","orgType":"Engineering association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20American%20Society%20of%20Civil%20Engineers","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.asce.org/events"},{"seedId":"xlsx1-195","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"American Institute of Architects","country":"United States","orgType":"Architecture association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20American%20Institute%20of%20Architects","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://conferenceonarchitecture.com/"},{"seedId":"xlsx1-196","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"Urban Land Institute","country":"United States","orgType":"Real estate association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20Urban%20Land%20Institute","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://uli.org/events/"},{"seedId":"xlsx1-197","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"CoreNet Global","country":"United States","orgType":"Corporate real estate association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20CoreNet%20Global","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.corenetglobal.org/events"},{"seedId":"xlsx1-198","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"International Facility Management Association","country":"United States","orgType":"Facilities association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20International%20Facility%20Management%20Association","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.ifma.org/events/"},{"seedId":"xlsx1-199","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"National Retail Federation","country":"United States","orgType":"Retail association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20National%20Retail%20Federation","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://nrf.com/events"},{"seedId":"xlsx1-200","name":"Current CEO / President","title":"CEO / President / Executive Director","org":"National Restaurant Association","country":"United States","orgType":"Hospitality association","linkedin":"https://www.linkedin.com/search/results/people/?keywords=CEO%20OR%20President%20OR%20Executive%20Director%20National%20Restaurant%20Association","status":"Not Contacted","notes":"Role-based LinkedIn search — identify & verify the current decision-maker.\nEvent evidence: https://www.nationalrestaurantshow.com/"}];
+async function importSeedsIfNeeded(){
+  if(db.seedVersion === SEED_VERSION) return;
+  // re-read latest first so we never clobber another device's data
+  await loadDb();
+  if(db.seedVersion === SEED_VERSION) return;
+  const existing = new Set(db.prospects.map(p=>p.seedId).filter(Boolean));
+  const now = Date.now();
+  let added = 0;
+  SEED_DATA.forEach((s,i)=>{
+    if(existing.has(s.seedId)) return;
+    db.prospects.push({
+      id: 'sd-'+s.seedId,
+      seedId: s.seedId,
+      name: s.name, title: s.title, org: s.org, country: s.country||'',
+      linkedin: s.linkedin,
+      category: 'speaking',
+      status: STATUSES.includes(s.status) ? s.status : 'Not Contacted',
+      notes: s.notes||'',
+      createdAt: now - (SEED_DATA.length-i), updatedAt: now - (SEED_DATA.length-i),
+      dayKey: 'preloaded',
+    });
+    added++;
+  });
+  db.seedVersion = SEED_VERSION;
+  db.lastUpdated = Date.now();
+  logActivity(db,'add', `Prospect database imported: <b>${added} speaking-engagement leads</b> preloaded from Excel`);
+  try{ await persist(); }catch(e){ console.error('Seed import save failed', e); }
+}
+
+/* ===================== init ===================== */
+function fillSelect(id, items, withAll, allLabel){
+  const el = $(id); if(!el) return;
+  el.innerHTML = (withAll?`<option value="all">${allLabel}</option>`:'') + items.map(i=>
+    typeof i==='string' ? `<option value="${esc(i)}">${esc(i)}</option>` : `<option value="${i.id}">${esc(i.short)}</option>`
+  ).join('');
+}
+async function init(){
+  if(BACKEND==='firebase'){
+    firebase.initializeApp(FIREBASE_CONFIG);
+    fbRef = firebase.database().ref(DB_PATH);
+  }else if(BACKEND==='local'){
+    const bar = document.createElement('div');
+    bar.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:300;background:#141311;color:#F8C64B;font:600 12.5px/1.4 Inter,sans-serif;padding:10px 18px;text-align:center';
+    bar.textContent = '⚠ Demo mode — data is saved on this device only. Paste your Firebase config into index.html (see README) to enable the shared real-time database.';
+    document.body.appendChild(bar);
+  }
+  fillSelect('f-cat', CATEGORIES, false);
+  fillSelect('e-cat', CATEGORIES, false);
+  fillSelect('f-status', STATUSES, false);
+  fillSelect('va-filter-cat', CATEGORIES, true, 'All categories');
+  fillSelect('va-filter-status', STATUSES, true, 'All statuses');
+  fillSelect('cl-filter-cat', CATEGORIES, true, 'All categories');
+  fillSelect('cl-filter-status', STATUSES, true, 'All statuses');
+  $('modal-veil').addEventListener('click', e=>{ if(e.target.id==='modal-veil') closeModal(); });
+  await loadDb();
+  await importSeedsIfNeeded();
+  go(currentPage || 'home');
+  startRealtime();
+}
+init();
+</script>
+</body>
+</html>
