@@ -348,6 +348,7 @@ tr:hover td{background:#FCFAF6}
         <div class="table-tools">
           <input type="text" id="va-search" placeholder="Search name, organization, or notes…" oninput="renderVaTable()">
           <select id="va-filter-cat" onchange="renderVaTable()"></select>
+          <select id="va-filter-country" onchange="renderVaTable()"></select>
           <select id="va-filter-status" onchange="renderVaTable()"></select>
           <select id="va-filter-hiring" onchange="renderVaTable()"><option value="all">Any hiring role</option><option>High</option><option>Medium</option><option>Low</option></select>
           <select id="va-sort" onchange="renderVaTable()"><option value="new">Newest first</option><option value="score">Lead score</option></select>
@@ -422,6 +423,7 @@ tr:hover td{background:#FCFAF6}
         <div class="table-tools">
           <input type="text" id="cl-search" placeholder="Search prospects…" oninput="renderClientTable()">
           <select id="cl-filter-cat" onchange="renderClientTable()"></select>
+          <select id="cl-filter-country" onchange="renderClientTable()"></select>
           <select id="cl-filter-status" onchange="renderClientTable()"></select>
           <select id="cl-filter-hiring" onchange="renderClientTable()"><option value="all">Any hiring role</option><option>High</option><option>Medium</option><option>Low</option></select>
           <select id="cl-sort" onchange="renderClientTable()"><option value="new">Newest first</option><option value="score">Lead score</option></select>
@@ -906,8 +908,10 @@ function filteredProspects(prefix){
   const q = ($(prefix+'-search').value||'').toLowerCase();
   const fc = $(prefix+'-filter-cat').value, fs = $(prefix+'-filter-status').value;
   const fh = $(prefix+'-filter-hiring').value, sort = $(prefix+'-sort').value;
+  const fco = $(prefix+'-filter-country').value;
   const list = db.prospects.filter(p=>{
     if(fc!=='all' && p.category!==fc) return false;
+    if(fco!=='all' && (p.location||p.country||'') !== fco) return false;
     if(fs!=='all' && p.status!==fs) return false;
     if(fh!=='all' && (p.hiring||'')!==fh) return false;
     if(q){
@@ -1161,7 +1165,22 @@ function go(page){
   renderAll();
   if(BACKEND!=='firebase') startPolling();
 }
+const PINNED_COUNTRIES = ['United States','United Kingdom','Canada'];
+function refreshCountryFilters(){
+  const counts = {};
+  db.prospects.forEach(p=>{ const c=(p.location||p.country||'').trim(); if(c) counts[c]=(counts[c]||0)+1; });
+  const rest = Object.keys(counts).filter(c=>!PINNED_COUNTRIES.includes(c)).sort((a,b)=>a.localeCompare(b));
+  const ordered = [...PINNED_COUNTRIES.filter(c=>counts[c]), ...rest];
+  for(const pid of ['va','cl']){
+    const el = $(pid+'-filter-country'); if(!el) continue;
+    const cur = el.value;
+    el.innerHTML = '<option value="all">All countries</option>' +
+      ordered.map(c=>`<option value="${esc(c)}">${esc(c)} (${counts[c]})</option>`).join('');
+    el.value = ordered.includes(cur) ? cur : 'all';
+  }
+}
 function renderAll(){
+  refreshCountryFilters();
   if(currentPage==='va') renderVa();
   if(currentPage==='client') renderClient();
 }
